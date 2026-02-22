@@ -1,18 +1,27 @@
 import express from "express";
+import { attachWebSocketServer } from "./src/ws/server.js";
+import http from "http";
 
-import { matchesRoutes } from "./src/routes/index.js";
+const PORT = Number(process.env.PORT || 8000);
+const HOST = process.env.HOST || "0.0.0.0";
 
 const app = express();
-const PORT = 8000;
+const server = http.createServer(app);
 
 app.use(express.json());
 
-app.get("/", (_req, res) => {
+app.get("/", (req, res) => {
   res.json({ message: "Welcome to Sportz API" });
 });
+const { broadcastMatchCreated } = attachWebSocketServer(server);
+app.locals.broadcastMatchCreated = broadcastMatchCreated;
 
-app.use("/matches", matchesRoutes);
+server.listen(PORT, HOST, () => {
+  const baseUrl =
+    HOST === "0.0.0.0" ? `http://localhost:${PORT}` : `http://${HOST}:${PORT}`;
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+  console.log(`Server is running on ${baseUrl}`);
+  console.log(
+    `WebSocket Server is running on ${baseUrl.replace("http", "ws")}/ws`,
+  );
 });
