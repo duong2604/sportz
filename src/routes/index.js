@@ -1,3 +1,3 @@
-import matchesRoutes from "./matches.route.js";
+import matchesRoutes from "./matches.route.js/index.js";
 
 export { matchesRoutes };

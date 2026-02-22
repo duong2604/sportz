@@ -9,9 +9,10 @@ if (!process.env.DATABASE_URL) {
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  // Neon requires SSL; rejectUnauthorized:false avoids cert-chain issues on
-  // local machines while still encrypting the connection.
-  ssl: { rejectUnauthorized: false },
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? true // Use proper certificate verification in production
+      : { rejectUnauthorized: false }, // Relaxed for local development
   max: 10, // maximum connections in the pool
   idleTimeoutMillis: 30_000, // close idle connections after 30 s
   connectionTimeoutMillis: 5_000, // fail fast if Neon is unreachable

@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: "Failed to get list of matches",
-      details: JSON.stringify(error),
+      details: error instanceof Error ? error.message : String(error),
     });
   }
 });
@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const parsed = createMatchSchema.safeParse(req.body);
   if (!parsed.success) {
-    return res.json({
+    return res.status(400).json({
       message: "Invalid payload",
       details: parsed.error.issues,
     });
@@ -68,9 +68,9 @@ router.post("/", async (req, res) => {
 
     return res.status(201).json({ data: event });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to create match",
-      details: JSON.stringify(error),
+      details: error instanceof Error ? error.message : String(error),
     });
   }
 });
