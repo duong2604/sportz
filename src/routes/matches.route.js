@@ -7,7 +7,6 @@ import { db } from "../db/db.js";
 import { matches } from "../db/schema.js";
 import { getMatchStatus } from "../utils/match-status.js";
 import { desc } from "drizzle-orm";
-
 const router = Router();
 
 const MAX_LIMIT = 100;
