@@ -41,9 +41,9 @@ router.get("/:matchId/commentary", async (req, res) => {
 
     return res.status(200).json({ data: results });
   } catch (error) {
+    console.log("Failed to create commentary entry", error);
     return res.status(500).json({
       message: "Failed to fetch commentary",
-      details: error instanceof Error ? error.message : String(error),
     });
   }
 });
